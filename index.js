@@ -124,6 +124,7 @@ function createQuestions(questions) {
     appendElementsToQuestionContainer( headerDiv, answerDiv, questionContainer);
     appendQuestionContainerToQuizContainer(questionContainer);
     countTotalAnswerOptions(question);
+    setTitleBolder();
   }
 
   function createQuestionContainer() {
@@ -278,6 +279,12 @@ function createQuestions(questions) {
   }
 
   showQuestion();
+}
+
+function setTitleBolder() {
+  const title = document.querySelector('.question-title');
+  title.style.WebkitTextStroke = "1px black";
+  title.style.textStroke = "1px black";
 }
 
   
