@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Didact+Gothic');
+@import url('https://fonts.googleapis.com/css?family=Rubik%20Iso');
 
 body {
     background-image: url('https://img.freepik.com/free-photo/red-black-brush-stroke-banner-background-perfect-canva_1361-3597.jpg?t=st=1679325833~exp=1679326433~hmac=9d22047c83ae31268e725c3519cda564d5920a0953221aacb03ad165feddbc32');
@@ -12,18 +13,13 @@ body {
     font-family: 'Didact Gothic';
 }
 
-.button-container {
-    text-align: center;
-    order: 1;
-    position: absolute;
-    margin: auto;
-    width: 550px;
-    bottom: 0px;
+.container {
+   text-align: center;
 }
 
-#fetch {
-    margin: 0 auto;
-    width: 100px;
+.title-container {
+  text-align: center;
+  margin-top: 0px ;
 }
 
 main {
@@ -31,17 +27,21 @@ main {
     display: flex;
     flex-direction: column;
     margin: auto;
-    height: 700px;
-    width: 550px;  
+    margin-bottom: 100px;
+    height: 500px;
+    width: 550px; 
 }
 
-main > h1 {
-    font-size: 40px;
+#header-title {
+    font-size: 100px;
     font-weight: bolder;
+    color: white;
+    font-family: Rubik Iso;
 }
 
 .question-container {
     margin: auto;
+    margin-bottom: 100px;
     background-color: white;
     height: 500px;
     width: 550px;
@@ -122,6 +122,7 @@ form {
   
   button[type="submit"] {
     background-color: #4CAF50;
+    width: 10em;
     color: #fff;
     padding: 10px 20px;
     margin-top: 30px;
@@ -138,4 +139,18 @@ form {
 
   .hide {
     display: none;
+  }
+
+  #result-form {
+    text-align: center;
+  }
+
+  #wrong-answers {
+    -webkit-text-stroke: 1px red;
+    -webkit-text-stroke: 1px red;
+  }
+
+  #numQuestion {
+    -webkit-text-stroke: 1px black;
+    -webkit-text-stroke: 1px black;
   }

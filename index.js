@@ -1,16 +1,19 @@
-//const apiUrl = 'https://quizapi.io/api/v1/questions?apiKey=DCRondz5Ynv8tKQ1CTP7QIhIlDdTFa2cFRrtEUNj&category=code&difficulty=Hard&limit=10';
 
 const baseUrl = 'https://quizapi.io/api/v1/questions?apiKey=DCRondz5Ynv8tKQ1CTP7QIhIlDdTFa2cFRrtEUNj';
 let selectedCorrectAnswers = 0;
+let countWrongAnswers = 0;
 
 const button = document.querySelector('#fetch');
 
 const form = document.querySelector('#form-hide');
 const submitBtn = document.querySelector('#submit');
+const playAgainBtn = document.querySelector('#play-again-button');
+const resultForm = document.querySelector('#result-form');
+const resultMessage = document.querySelector('#result-answers');
+const resultNumQuestionsElement = document.querySelector('#numQuestion');
+const resultWrongAnswersElement = document.querySelector('#wrong-answers');
 
 submitBtn.addEventListener('click', async function(event) {
-
-  form.classList.add('hide');
   event.preventDefault();
   
   const apiUrl = createApiUrl();
@@ -29,21 +32,23 @@ submitBtn.addEventListener('click', async function(event) {
           multipleCorrectAnswers: q.multiple_correct_answers,
           correct_answers: q.correct_answers
       };
-      console.log(question);
+      
       questions.push(question);
   });
 
-  
+  form.classList.add('hide');
   createQuestions(questions);
 });
 
+playAgainBtn.addEventListener('click', () => {
+  form.classList.remove('hide');
+  resultForm.classList.add('hide');
+})
+
 const createApiUrl = () => {
-  let apiUrl = ''
   let selectedCategory = document.getElementById('category').value;
   let selectedDifficulty = document.getElementById('level').value;
   let selectedNumQuestions = document.getElementById('num-questions').value;
-
-  console.log(selectedCategory, selectedDifficulty, selectedNumQuestions);
 
   let baseLimit = '&limit=';
   let baseCategory = '&category=';
@@ -52,7 +57,6 @@ const createApiUrl = () => {
   if (selectedCategory == 'none') {
     selectedCategory = '';
     baseCategory = '';
-    console.log('none valdes');
   }
 
   if (selectedDifficulty == 'none') {
@@ -60,46 +64,10 @@ const createApiUrl = () => {
     baseDifficulty = '';
   }
 
-  const limit = '&limit=10'
-  const category = '&category=code'
-  const difficulty = '&difficulty=Hard'
+  const apiUrl = `${baseUrl}${baseCategory}${selectedCategory}${baseDifficulty}${selectedDifficulty}${baseLimit}${selectedNumQuestions}`;
 
-  const apiUrlTest = `${baseUrl}${baseCategory}${selectedCategory}${baseDifficulty}${selectedDifficulty}${baseLimit}${selectedNumQuestions}`;
-
-  apiUrl = `${baseUrl}${category}${difficulty}${limit}`;
-
-  console.log('test', apiUrlTest, 'den verkliga apiurl', apiUrl);
-
-  return apiUrlTest;
+  return apiUrl;
 } 
-
-
-// button.addEventListener('click', async e => {
-//     const limit = '&limit=10'
-//     const category = '&category=code'
-//     const difficulty = '&difficulty=Hard'
-
-//     const apiUrl = `${baseUrl}${category}${difficulty}${limit}`;
-
-//     const response = await fetch(apiUrl);
-//     const data = await response.json();
-//     console.log(data);
-  
-//     const questions = [];
-
-//     data.forEach(q => {
-//         const question = {
-//             question: q.question,
-//             answers: q.answers,
-//             correctAnswer: q.correct_answer
-//         };
-//         if (question.correctAnswer != null) {
-//         questions.push(question);
-//         }
-//     });
-
-//     createQuestions(questions);
-// });
 
 function createQuestions(questions) {
   const quizContainer = document.getElementById('questions');
@@ -217,13 +185,13 @@ function createQuestions(questions) {
             optionElement.classList.add('correct-answer');
           } else {
             optionElement.classList.add('incorrect-answer');
+            countWrongAnswers++;
           }
         }
       }
 
       const numCorrectAnswers = getNumCorrectAnswers(question);
 
-      console.log('selectedCorrectAnswer: ', selectedCorrectAnswers, 'antal rätt svar: ', numCorrectAnswers);
       if (selectedCorrectAnswers === numCorrectAnswers) {
         setTimeout(() => {
           quizContainer.removeChild(questionContainer);
@@ -231,6 +199,8 @@ function createQuestions(questions) {
           if (currentQuestion < questions.length) {
             showQuestion();
             selectedCorrectAnswers = 0;
+          } else {
+            gameIsOver();
           }
         }, 1000);
       }
@@ -238,7 +208,7 @@ function createQuestions(questions) {
 
   function countTotalAnswerOptions (question) {
     const questionContainer = document.querySelector('.question-container');
-    console.log(questionContainer);
+    
     let totalOptions = 0;
     for (i in question.answers) {
       if (question.answers[i] != null) {
@@ -247,13 +217,10 @@ function createQuestions(questions) {
     }
 
     if (totalOptions <=2 ) {
-      console.log('mindre eller lika med 2');
       questionContainer.style.height = '350px';
     } else if (totalOptions <= 4) {
-      console.log('mindre eller lika med 4');
       questionContainer.style.height = '500px';
     } else if (totalOptions <= 6) {
-      console.log('mindre eller lika med 6');
       questionContainer.style.height = '750px';
     }
   }
@@ -262,7 +229,6 @@ function createQuestions(questions) {
     let numOfCorrectAnswers = 0
       for (const property in question.correct_answers) {
         if (question.correct_answers[property] === 'true') {
-          console.log(`sant: ${property}: ${question.correct_answers[property]}`);
           numOfCorrectAnswers++;
         }
       }
@@ -281,10 +247,18 @@ function createQuestions(questions) {
   showQuestion();
 }
 
-function setTitleBolder() {
+const gameIsOver = () => {
+  let selectedNumQuestions = document.getElementById('num-questions').value;
+  resultForm.classList.remove('hide');
+  resultNumQuestionsElement.innerHTML = selectedNumQuestions;
+  resultWrongAnswersElement.innerHTML = countWrongAnswers;
+}
+
+const setTitleBolder = () => {
   const title = document.querySelector('.question-title');
   title.style.WebkitTextStroke = "1px black";
   title.style.textStroke = "1px black";
 }
+
 
   
